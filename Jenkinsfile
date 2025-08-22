@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        compose_service_name = "demo-reactapp"
+        compose_service_name = "react-jenkins-docker"
         workspace = "/home/jenkins/project/demo-reactapp"
     }
 
