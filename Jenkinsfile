@@ -3,7 +3,7 @@ pipeline {
     
     environment {
         compose_service_name = "demo-reactapp"
-        workspace = "/home/azureuser/project/demo-reactapp"
+        workspace = "/home/jenkins/project/demo-reactapp"
     }
 
     stages {
