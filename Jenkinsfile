@@ -4,7 +4,6 @@ pipeline {
     environment {
         compose_service_name = "demo-reactapp"
         workspace = "/home/jenkins/project/demo-reactapp"
-        DOCKER_COMPOSE_CMD = "sudo docker compose" // Use sudo if needed
     }
 
     stages {
@@ -21,8 +20,8 @@ pipeline {
             steps {
                 ws("${workspace}") {
                     sh """
-                        ${DOCKER_COMPOSE_CMD} down || true
-                        ${DOCKER_COMPOSE_CMD} build --no-cache ${compose_service_name}
+                        docker compose down || true
+                        docker compose build --no-cache ${compose_service_name}
                     """
                 }
             }
@@ -31,7 +30,7 @@ pipeline {
         stage('Docker Compose Up') {
             steps {
                 ws("${workspace}") {
-                    sh "${DOCKER_COMPOSE_CMD} up -d ${compose_service_name}"
+                    sh "docker compose up -d ${compose_service_name}"
                 }
             }
         }
@@ -40,7 +39,7 @@ pipeline {
     post {
         always {
             ws("${workspace}") {
-                sh "${DOCKER_COMPOSE_CMD} ps || true"
+                sh "docker compose ps || true"
             }
         }
         failure {
