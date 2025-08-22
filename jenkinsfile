@@ -8,7 +8,7 @@ pipeline {
         stage('Checkout Source') {
             steps {
                 ws("${workspace}") {
-                    checkout scm
+                     git branch: 'main', url: 'https://github.com/hnincho/demo-reactapp.git'
                 }
             }
         }
