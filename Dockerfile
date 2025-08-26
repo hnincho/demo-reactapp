@@ -1,26 +1,33 @@
-# Stage 1: Builder 
-FROM node:20-alpine as builder
+# Stage 1: Build React App
+FROM node:20-alpine AS builder
 
+# Set working directory
 WORKDIR /usr/src/app
 ENV PATH /usr/src/app/node_modules/.bin:$PATH
 
-# Install dependencies
-COPY package.json /usr/src/app/package.json
+# Copy package.json and install dependencies
+COPY package.json package-lock.json* ./
 RUN npm install --silent
 
-# Copy source and build
-COPY . /usr/src/app
+# Copy all source files and build
+COPY . ./
 RUN npm run build
 
-# Stage 2: Runtime (Nginx)
+# Stage 2: Serve with Nginx
 FROM nginx:alpine
 
-# Remove default config and add custom
+# Remove default Nginx config
 RUN rm -rf /etc/nginx/conf.d
-COPY conf /etc/nginx
 
-# Copy build output (React default = build/)
+# Copy custom Nginx config
+COPY conf/default.conf /etc/nginx/conf.d/default.conf
+
+# Copy React build from builder
 COPY --from=builder /usr/src/app/build /usr/share/nginx/html
 
+# Expose port 80
 EXPOSE 80
+
+# Start Nginx in the foreground
 CMD ["nginx", "-g", "daemon off;"]
+
